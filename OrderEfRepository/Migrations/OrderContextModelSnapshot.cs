@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OrderServiceTest;
 
 #nullable disable
 
-namespace OrderServiceTest.Migrations
+namespace OrderEfRepository.Migrations
 {
     [DbContext(typeof(OrderContext))]
     partial class OrderContextModelSnapshot : ModelSnapshot
@@ -23,7 +22,7 @@ namespace OrderServiceTest.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("OrderServiceTest.Models.Order", b =>
+            modelBuilder.Entity("OrderBase.Models.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +39,7 @@ namespace OrderServiceTest.Migrations
                     b.ToTable("Orders", "orders_service");
                 });
 
-            modelBuilder.Entity("OrderServiceTest.Models.OrderLine", b =>
+            modelBuilder.Entity("OrderBase.Models.OrderLine", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -58,9 +57,9 @@ namespace OrderServiceTest.Migrations
                     b.ToTable("OrderLines", "orders_service");
                 });
 
-            modelBuilder.Entity("OrderServiceTest.Models.OrderLine", b =>
+            modelBuilder.Entity("OrderBase.Models.OrderLine", b =>
                 {
-                    b.HasOne("OrderServiceTest.Models.Order", "Order")
+                    b.HasOne("OrderBase.Models.Order", "Order")
                         .WithMany("Lines")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -69,7 +68,7 @@ namespace OrderServiceTest.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("OrderServiceTest.Models.Order", b =>
+            modelBuilder.Entity("OrderBase.Models.Order", b =>
                 {
                     b.Navigation("Lines");
                 });

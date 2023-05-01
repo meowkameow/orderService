@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace OrderServiceTest.Migrations
+namespace OrderEfRepository.Migrations
 {
     public partial class Init : Migration
     {

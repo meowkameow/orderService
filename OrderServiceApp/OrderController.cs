@@ -1,34 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using OrderServiceTest.DataContracts;
-using OrderServiceTest.Models;
+using OrdersBase;
+using OrderServiceApp.DataContracts;
+using OrderServiceApp.ViewModels;
 
-namespace OrderServiceTest
+namespace OrderServiceApp
 {
-
     [ApiController]
     [Route("orders")]
     public class OrderController : ControllerBase
     {
-        private readonly OrderService orderService;
+        private readonly IOrderService _orderService;
 
-        public OrderController(OrderService orderService)
+        public OrderController(IOrderService orderService)
         {
-            this.orderService = orderService;
+            this._orderService = orderService;
         }
         
         [HttpPost()]
-        public async Task<ActionResult<OrderDc>> CreateOrder([FromBody] OrderDc order)
+        public async Task<ActionResult<OrderViewModel>> CreateOrder([FromBody] CreateOrderDto order)
         {
             try
             {
-                return await orderService.CreateOrderAsync(order);
+                var newOrder =  await _orderService.CreateOrderAsync(order.ToObject());
+                return OrderViewModel.FromObject(newOrder);
             }
             catch (Exception ex)
             {
@@ -40,11 +37,12 @@ namespace OrderServiceTest
         }
         
         [HttpPut("{orderId}")]
-        public async Task<ActionResult<OrderDc>> UpdateOrder([FromRoute] Guid orderId, [FromBody] OrderDc updateOrder)
+        public async Task<ActionResult<OrderViewModel>> UpdateOrder([FromRoute] Guid orderId, [FromBody] UpdateOrderDto updateOrder)
         {
             try
             {
-                return await orderService.UpdateOrderAsync(orderId, updateOrder);
+                var updatedOrder =   await _orderService.UpdateOrderAsync(orderId, updateOrder.ToObject());
+                return OrderViewModel.FromObject(updatedOrder);
             }
             catch (Exception ex)
             {
@@ -60,7 +58,7 @@ namespace OrderServiceTest
         {
             try
             {
-                await orderService.DeleteOrderAsync(orderId);
+                await _orderService.DeleteOrderAsync(orderId);
                 return this.Ok();
             }
             catch (Exception ex)
@@ -73,11 +71,12 @@ namespace OrderServiceTest
         }
         
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<OrderDc>> GetOrder([FromRoute] Guid orderId)
+        public async Task<ActionResult<OrderViewModel>> GetOrder([FromRoute] Guid orderId)
         {
             try
             {
-                return await orderService.GetOrderAsync(orderId);
+                var order = await _orderService.GetOrderAsync(orderId);
+                return OrderViewModel.FromObject(order);
             }
             catch (Exception ex)
             {

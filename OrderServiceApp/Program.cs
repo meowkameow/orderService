@@ -1,17 +1,13 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using OrderEfRepository;
+using OrdersBase;
+using OrderServices;
 
-namespace OrderServiceTest
+namespace OrderServiceApp
 {
     public class Program
     {
@@ -26,24 +22,16 @@ namespace OrderServiceTest
                         {
                             new StringEnumConverter(),
                         };
-                    });;
-            
-            
-            builder.Services.AddScoped<OrderService>();
-            builder.Services.AddScoped<OrderContext>();
+                    });
+
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddDbContext<OrderContext>();
             
             var app = builder.Build();
-
             app.UseHttpsRedirection();
-
             app.MapControllers();
-
             app.Run();
-
-          
         }
-        
     }
-    
-    
 }
